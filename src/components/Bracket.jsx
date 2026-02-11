@@ -1,7 +1,8 @@
 import React from "react";
 
-export default function Bracket({ qf, onUpdate }) {
+export default function Bracket({ qf, onUpdate, readOnly = false }) {
   function setMatch(idx, patch) {
+    if (readOnly) return; // Prevent changes in read-only mode
     const next = qf.slice();
     next[idx] = { ...next[idx], ...patch };
     onUpdate(next);
@@ -45,7 +46,8 @@ export default function Bracket({ qf, onUpdate }) {
                     display: "flex",
                     gap: 8,
                     alignItems: "center",
-                    cursor: "pointer",
+                    cursor: readOnly ? "not-allowed" : "pointer",
+                    opacity: readOnly ? 0.6 : 1,
                   }}
                 >
                   <input
@@ -54,6 +56,7 @@ export default function Bracket({ qf, onUpdate }) {
                     onChange={(e) =>
                       setMatch(idx, { played: e.target.checked })
                     }
+                    disabled={readOnly}
                   />
                   <span style={{ fontWeight: 600 }}>Played</span>
                 </label>
@@ -82,6 +85,8 @@ export default function Bracket({ qf, onUpdate }) {
                           e.target.value === "" ? null : Number(e.target.value),
                       })
                     }
+                    disabled={readOnly}
+                    style={{ cursor: readOnly ? "not-allowed" : "text", opacity: readOnly ? 0.7 : 1 }}
                   />
                 </div>
 
@@ -119,6 +124,8 @@ export default function Bracket({ qf, onUpdate }) {
                           e.target.value === "" ? null : Number(e.target.value),
                       })
                     }
+                    disabled={readOnly}
+                    style={{ cursor: readOnly ? "not-allowed" : "text", opacity: readOnly ? 0.7 : 1 }}
                   />
                 </div>
               </div>

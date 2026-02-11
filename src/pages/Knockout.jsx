@@ -6,9 +6,12 @@ import { generateQuarterfinals } from "../utils/bracket";
 import Bracket from "../components/Bracket";
 import { getPlayerLogoPath } from "../utils/playerLogos";
 import Footer from "../components/Footer";
+import { isAdminAuthenticated } from "../components/AdminAuth";
+import { Link } from "react-router-dom";
 
 export default function KnockoutPage() {
   const { state, updateState } = useAppState();
+  const isAdmin = isAdminAuthenticated();
 
   const groupTables = useMemo(
     () => computeAllGroups(state.players, state.matches),
@@ -62,13 +65,17 @@ export default function KnockoutPage() {
                 {completedQF}/{totalQF} Complete
               </span>
             )}
-            <button className="btn success" onClick={generate} disabled={!canGenerate}>
-              ⚡ Generate Bracket
-            </button>
-            {state.knockout?.qf?.length > 0 && (
-              <button className="btn danger" onClick={clearBracket}>
-                🗑️ Clear
-              </button>
+            {isAdmin && (
+              <>
+                <button className="btn success" onClick={generate} disabled={!canGenerate}>
+                  ⚡ Generate Bracket
+                </button>
+                {state.knockout?.qf?.length > 0 && (
+                  <button className="btn danger" onClick={clearBracket}>
+                    🗑️ Clear
+                  </button>
+                )}
+              </>
             )}
           </div>
         </div>
@@ -89,9 +96,84 @@ export default function KnockoutPage() {
         )}
       </div>
 
+      {/* Admin/Public Banner */}
+      {isAdmin ? (
+        <div className="card" style={{
+          marginTop: 16,
+          background: "linear-gradient(135deg, rgba(34, 197, 94, 0.08), rgba(16, 185, 129, 0.05))",
+          border: "1px solid rgba(34, 197, 94, 0.2)"
+        }}>
+          <div style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            padding: "4px 0"
+          }}>
+            <span style={{ fontSize: 24 }}>🔓</span>
+            <div style={{ flex: 1 }}>
+              <div style={{
+                fontWeight: 700,
+                fontSize: 14,
+                color: "var(--good)",
+                marginBottom: 2
+              }}>
+                Admin Access Granted
+              </div>
+              <div className="small" style={{ opacity: 0.8 }}>
+                You can generate brackets, edit match scores, and manage the knockout stage.
+              </div>
+            </div>
+            <span className="badge good" style={{
+              background: "rgba(34, 197, 94, 0.15)",
+              border: "1px solid rgba(34, 197, 94, 0.3)"
+            }}>
+              ⚙️ ADMIN
+            </span>
+          </div>
+        </div>
+      ) : (
+        <div className="card" style={{
+          marginTop: 16,
+          background: "linear-gradient(135deg, rgba(251, 191, 36, 0.08), rgba(245, 158, 11, 0.05))",
+          border: "1px solid rgba(251, 191, 36, 0.2)"
+        }}>
+          <div style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            padding: "4px 0"
+          }}>
+            <span style={{ fontSize: 24 }}>🔒</span>
+            <div style={{ flex: 1 }}>
+              <div style={{
+                fontWeight: 700,
+                fontSize: 14,
+                color: "var(--warn)",
+                marginBottom: 2
+              }}>
+                Read-Only Mode
+              </div>
+              <div className="small" style={{ opacity: 0.8 }}>
+                Bracket management is restricted to admins. <Link to="/admin" style={{
+                  color: "var(--warn)",
+                  textDecoration: "underline",
+                  fontWeight: 600
+                }}>Login as admin</Link> to edit.
+              </div>
+            </div>
+            <span className="badge warn" style={{
+              background: "rgba(251, 191, 36, 0.15)",
+              border: "1px solid rgba(251, 191, 36, 0.3)"
+            }}>
+              👁️ VIEW ONLY
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* Bracket Display */}
       {state.knockout?.qf?.length > 0 ? (
-        <Bracket qf={state.knockout.qf} onUpdate={updateQF} />
+        <Bracket qf={state.knockout.qf} onUpdate={updateQF} readOnly={!isAdmin} />
       ) : (
         <div className="card" style={{ marginTop: 16 }}>
           <div className="empty-state">

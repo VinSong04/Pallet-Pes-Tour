@@ -1,7 +1,8 @@
 import React, { useMemo } from "react";
 
-export default function MatchRow({ match, homeName, awayName, onChange }) {
+export default function MatchRow({ match, homeName, awayName, onChange, readOnly = false }) {
   function setGame(idx, homeGoals, awayGoals) {
+    if (readOnly) return; // Prevent changes in read-only mode
     const games = [...(match.games || [{}, {}, {}])];
     games[idx] = { homeGoals, awayGoals };
     onChange({ ...match, games });
@@ -42,13 +43,15 @@ export default function MatchRow({ match, homeName, awayName, onChange }) {
             display: "flex",
             gap: 8,
             alignItems: "center",
-            cursor: "pointer",
+            cursor: readOnly ? "not-allowed" : "pointer",
+            opacity: readOnly ? 0.6 : 1,
           }}
         >
           <input
             type="checkbox"
             checked={!!match.played}
-            onChange={(e) => onChange({ ...match, played: e.target.checked })}
+            onChange={(e) => !readOnly && onChange({ ...match, played: e.target.checked })}
+            disabled={readOnly}
           />
           <span style={{ fontWeight: 600 }}>Played</span>
         </label>
@@ -193,6 +196,8 @@ export default function MatchRow({ match, homeName, awayName, onChange }) {
                       awayG
                     )
                   }
+                  disabled={readOnly}
+                  style={{ cursor: readOnly ? "not-allowed" : "text", opacity: readOnly ? 0.7 : 1 }}
                 />
                 <input
                   className="input game-input"
@@ -207,6 +212,8 @@ export default function MatchRow({ match, homeName, awayName, onChange }) {
                       e.target.value === "" ? null : Number(e.target.value)
                     )
                   }
+                  disabled={readOnly}
+                  style={{ cursor: readOnly ? "not-allowed" : "text", opacity: readOnly ? 0.7 : 1 }}
                 />
                 <span
                   style={{
