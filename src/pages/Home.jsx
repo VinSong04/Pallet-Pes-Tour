@@ -43,7 +43,14 @@ export default function HomePage() {
             <span className="live-dot" />
             Season 2026
           </div>
-          <h1 className="hero-title">⚽ {tournamentName}</h1>
+          <div className="hero-logo-container">
+            <img
+              src={`${import.meta.env.BASE_URL}assets/pallet.jpg`}
+              alt="Pallet Pes Tour"
+              className="hero-logo"
+            />
+          </div>
+          <h1 className="hero-title">{tournamentName}</h1>
           <p className="hero-tagline">The Ultimate eFootball Showdown</p>
           <p className="hero-sub">
             {totalPlayers} Players · {totalGroups} Groups · Best-of-3 Series ·
