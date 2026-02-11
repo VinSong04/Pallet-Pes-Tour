@@ -357,10 +357,13 @@ img {
   z-index: 52;
 }
 
-.brand-icon {
-  font-size: 20px;
-  -webkit-text-fill-color: initial;
-  filter: drop-shadow(0 2px 6px rgba(108, 140, 255, 0.3));
+.brand-logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .navlinks {

@@ -5,6 +5,7 @@ import StandingsPage from "./pages/Standings";
 import MatchesPage from "./pages/Matches";
 import KnockoutPage from "./pages/Knockout";
 import AdminPage from "./pages/Admin";
+import palletLogo from "./assets/pallet.jpg";
 
 const NAV_ITEMS = [
   { to: "/", label: "Home", icon: "🏠", end: true },
@@ -59,7 +60,7 @@ export default function App() {
     <>
       <nav className="nav" role="navigation" aria-label="Main navigation" ref={menuRef}>
         <div className="brand">
-          <span className="brand-icon">⚽</span>
+          <img src={palletLogo} alt="Logo" className="brand-logo" />
           Pallet Pes Tour
         </div>
 
