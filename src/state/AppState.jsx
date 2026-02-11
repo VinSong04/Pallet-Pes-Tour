@@ -2,7 +2,7 @@ import React, { createContext, useContext, useMemo, useState } from "react";
 import { TEMPLATE } from "../data/template";
 import { loadState, saveState, resetState } from "../utils/storage";
 
-const Ctx = createContext(null);
+export const Ctx = createContext(null);  // ← Export it here
 
 export function AppStateProvider({ children }) {
   const [state, setState] = useState(() => loadState(TEMPLATE));

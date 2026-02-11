@@ -1,29 +1,117 @@
-import React from "react";
-import { NavLink, Route, Routes } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
+import { NavLink, Route, Routes, useLocation } from "react-router-dom";
+import HomePage from "./pages/Home";
 import StandingsPage from "./pages/Standings";
 import MatchesPage from "./pages/Matches";
 import KnockoutPage from "./pages/Knockout";
 import AdminPage from "./pages/Admin";
 
+const NAV_ITEMS = [
+  { to: "/", label: "Home", icon: "🏠", end: true },
+  { to: "/standings", label: "Standings", icon: "📊" },
+  { to: "/matches", label: "Matches", icon: "🎮" },
+  { to: "/knockout", label: "Knockout", icon: "🏆" },
+  { to: "/admin", label: "Admin", icon: "⚙️" },
+];
+
 export default function App() {
+  const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "dark");
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(null);
+  const location = useLocation();
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  // Close menu on route change
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location]);
+
+  // Close menu on outside click
+  useEffect(() => {
+    function handleClick(e) {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setMenuOpen(false);
+      }
+    }
+    if (menuOpen) {
+      document.addEventListener("mousedown", handleClick);
+      return () => document.removeEventListener("mousedown", handleClick);
+    }
+  }, [menuOpen]);
+
+  // Lock body scroll when menu open on mobile
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [menuOpen]);
+
+  const toggleTheme = () => setTheme((t) => (t === "dark" ? "light" : "dark"));
+
   return (
     <>
-      <div className="nav">
-        <div className="brand">⚽ eFootball Dashboard</div>
-        <div className="navlinks">
-          <NavLink to="/" className={({isActive}) => "pill" + (isActive ? " active" : "")}>Standings</NavLink>
-          <NavLink to="/matches" className={({isActive}) => "pill" + (isActive ? " active" : "")}>Matches</NavLink>
-          <NavLink to="/knockout" className={({isActive}) => "pill" + (isActive ? " active" : "")}>Knockout</NavLink>
-          <NavLink to="/admin" className={({isActive}) => "pill" + (isActive ? " active" : "")}>Admin</NavLink>
+      <nav className="nav" role="navigation" aria-label="Main navigation" ref={menuRef}>
+        <div className="brand">
+          <span className="brand-icon">⚽</span>
+          Pallet Pes Tour
         </div>
-      </div>
 
-      <Routes>
-        <Route path="/" element={<StandingsPage />} />
-        <Route path="/matches" element={<MatchesPage />} />
-        <Route path="/knockout" element={<KnockoutPage />} />
-        <Route path="/admin" element={<AdminPage />} />
-      </Routes>
+        {/* Hamburger Button (mobile only) */}
+        <button
+          className="hamburger"
+          onClick={() => setMenuOpen((v) => !v)}
+          aria-label="Toggle navigation"
+          aria-expanded={menuOpen}
+        >
+          <span className={`hamburger-bar ${menuOpen ? "open" : ""}`} />
+          <span className={`hamburger-bar ${menuOpen ? "open" : ""}`} />
+          <span className={`hamburger-bar ${menuOpen ? "open" : ""}`} />
+        </button>
+
+        {/* Overlay for mobile */}
+        {menuOpen && <div className="nav-overlay" onClick={() => setMenuOpen(false)} />}
+
+        <div className={`navlinks ${menuOpen ? "navlinks-open" : ""}`}>
+          {NAV_ITEMS.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              end={item.end}
+              className={({ isActive }) => "pill" + (isActive ? " active" : "")}
+              onClick={() => setMenuOpen(false)}
+            >
+              <span className="nav-icon">{item.icon}</span>
+              {item.label}
+            </NavLink>
+          ))}
+
+          <button
+            className="pill theme-toggle"
+            onClick={toggleTheme}
+            title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+            aria-label="Toggle theme"
+          >
+            <span className="theme-icon">{theme === "dark" ? "☀️" : "🌙"}</span>
+          </button>
+        </div>
+      </nav>
+
+      <main className="page-transition" key={location.pathname}>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/standings" element={<StandingsPage />} />
+          <Route path="/matches" element={<MatchesPage />} />
+          <Route path="/knockout" element={<KnockoutPage />} />
+          <Route path="/admin" element={<AdminPage />} />
+        </Routes>
+      </main>
     </>
   );
 }
