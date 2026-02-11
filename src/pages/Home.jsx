@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useAppState } from "../state/AppState";
 import { computeAllGroups } from "../utils/standings";
 import { getPlayerLogoPath } from "../utils/playerLogos";
+import palletLogo from "../assets/pallet.jpg";
 import Footer from "../components/Footer";
 
 export default function HomePage() {
@@ -45,7 +46,7 @@ export default function HomePage() {
           </div>
           <div className="hero-logo-container">
             <img
-              src={`${import.meta.env.BASE_URL}assets/pallet.jpg`}
+              src={palletLogo}
               alt="Pallet Pes Tour"
               className="hero-logo"
             />
