@@ -51,7 +51,7 @@ export default function StandingsPage() {
                 {state.tournament?.name || "eFootball Tournament"}
               </div>
               <div className="tourneySub">
-                {state.tournament?.season || "Group Stage → Last 8"}
+                {state.tournament?.stage || "Group Stage → Last 8"}
               </div>
             </div>
           </div>

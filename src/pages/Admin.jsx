@@ -8,6 +8,7 @@ export default function AdminPage() {
 
   const [name, setName] = useState(state.tournament?.name || "");
   const [season, setSeason] = useState(state.tournament?.season || "");
+  const [tagline, setTagline] = useState(state.tournament?.tagline || "");
   const [q, setQ] = useState("");
   const [groupFilter, setGroupFilter] = useState("ALL");
   const [saved, setSaved] = useState(false);
@@ -16,7 +17,7 @@ export default function AdminPage() {
   function saveTournament() {
     updateState((prev) => ({
       ...prev,
-      tournament: { ...prev.tournament, name, season },
+      tournament: { ...prev.tournament, name, season, tagline },
     }));
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
@@ -36,7 +37,8 @@ export default function AdminPage() {
     }
     reset();
     setName("eFootball Tournament");
-    setSeason("Group Stage → Last 8");
+    setSeason("Spring 2026");
+    setTagline("Legends Start Here");
     setConfirmReset(false);
   }
 
@@ -147,6 +149,18 @@ export default function AdminPage() {
                   value={season}
                   onChange={(e) => setSeason(e.target.value)}
                   placeholder="Season subtitle"
+                />
+              </div>
+
+              <div className="span12">
+                <div className="small" style={{ fontWeight: 700, marginBottom: 6 }}>
+                  Tagline
+                </div>
+                <input
+                  className="input"
+                  value={tagline}
+                  onChange={(e) => setTagline(e.target.value)}
+                  placeholder="Homepage tagline"
                 />
               </div>
             </div>

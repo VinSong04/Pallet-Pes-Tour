@@ -23,6 +23,8 @@ export default function HomePage() {
   const totalMatches = state.matches?.length || 18;
   const progress = totalMatches > 0 ? (matchesPlayed / totalMatches) * 100 : 0;
   const tournamentName = state.tournament?.name || "Pallet Pes Tour";
+  const season = state.tournament?.season || "Spring 2026";
+  const tagline = state.tournament?.tagline || "Legends Start Here";
 
   // Top scorers from standings
   const allPlayers = useMemo(() => {
@@ -42,21 +44,18 @@ export default function HomePage() {
         <div className="hero-content">
           <div className="hero-badge">
             <span className="live-dot" />
-            Season 2026
+            {season}
           </div>
           <div className="hero-logo-container">
             <img
               src={palletLogo}
-              alt="Pallet Pes Tour"
+              alt="Pallet eFootball Championship"
               className="hero-logo"
             />
           </div>
           <h1 className="hero-title">{tournamentName}</h1>
-          <p className="hero-tagline">The Ultimate eFootball Showdown</p>
-          <p className="hero-sub">
-            {totalPlayers} Players · {totalGroups} Groups · Best-of-3 Series ·
-            Last 8 Knockout
-          </p>
+          <p className="hero-tagline">{tagline}</p>
+
           <div className="hero-actions">
             <Link to="/standings" className="hero-btn primary">
               📊 View Standings

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { NavLink, Route, Routes, useLocation } from "react-router-dom";
+import { useAppState } from "./state/AppState";
 import HomePage from "./pages/Home";
 import StandingsPage from "./pages/Standings";
 import MatchesPage from "./pages/Matches";
@@ -16,6 +17,7 @@ const NAV_ITEMS = [
 ];
 
 export default function App() {
+  const { isLoading, usingFirebase } = useAppState();
   const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "dark");
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
@@ -93,6 +95,24 @@ export default function App() {
             </NavLink>
           ))}
 
+          {usingFirebase && (
+            <div
+              className="pill"
+              style={{
+                cursor: 'default',
+                background: 'rgba(52, 211, 153, 0.1)',
+                border: '1px solid var(--good)',
+                color: 'var(--good)',
+                fontSize: '11px',
+                padding: '6px 10px'
+              }}
+              title="Real-time sync enabled via Firebase"
+            >
+              <span style={{ marginRight: 4 }}>🔥</span>
+              Live Sync
+            </div>
+          )}
+
           <button
             className="pill theme-toggle"
             onClick={toggleTheme}
@@ -103,6 +123,23 @@ export default function App() {
           </button>
         </div>
       </nav>
+
+      {isLoading && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          background: 'var(--accent)',
+          color: 'white',
+          padding: '8px',
+          textAlign: 'center',
+          fontSize: '13px',
+          zIndex: 9999
+        }}>
+          🔥 Loading tournament data from Firebase...
+        </div>
+      )}
 
       <main className="page-transition" key={location.pathname}>
         <Routes>

@@ -21,4 +21,6 @@ npm-debug.log*
 # Environment
 .env
 .env.local
-.env.*
+.env.development
+.env.test
+# Allow .env.production to be committed for deployment
